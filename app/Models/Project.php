@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
+// Model Project untuk pengajuan layanan oleh Sales
 class Project extends Model
 {
+    use HasFactory;
+    
     //Kolom utama project.
     protected $fillable = [
         'lead_id', 'product_id', 'status', 'notes',

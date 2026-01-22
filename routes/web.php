@@ -69,8 +69,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Project approval
         Route::get('/projects', [ProjectController::class, 'index']);
-        Route::post('/projects/{id}/approve', [ProjectController::class, 'approve']);
-        Route::post('/projects/{id}/reject', [ProjectController::class, 'reject']);
+        Route::post('/projects/{project}/approve', [ProjectController::class, 'approve']);
+        Route::post('/projects/{project}/reject', [ProjectController::class, 'reject']);
 
         // User management (internal)
         Route::post('/users', [UserController::class, 'store']);
