@@ -1,67 +1,72 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
 |--------------------------------------------------------------------------
+| Login & logout untuk user internal (Sales & Manager)
 */
+Route::get('/login', [AuthController::class, 'showLoginForm'])
+    ->name('login');
 
-// Route untuk login & logout
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| Protected Routes
+| Protected Routes (Authenticated Users)
 |--------------------------------------------------------------------------
 */
-
-// Semua route di dalam group ini wajib login
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard (bisa diakses semua role)
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    });
-
-    // Sales Routes
+    /*
+    |--------------------------------------------------------------------------
+    | Sales Routes
+    |--------------------------------------------------------------------------
+    | Akses khusus role sales
+    */
     Route::middleware(['role:sales'])->group(function () {
+
+        // Dashboard Sales
+        Route::get('/sales/dashboard', function () {
+            return view('sales.dashboard');
+        });
+
+        // Lead management
         Route::get('/leads', [LeadController::class, 'index']);
+
+        // Project submission
         Route::get('/projects/create', [ProjectController::class, 'create']);
         Route::post('/projects', [ProjectController::class, 'store']);
     });
 
-    // Manager Routes
-     Route::middleware(['role:manager'])->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Manager Routes
+    |--------------------------------------------------------------------------
+    | Akses khusus role manager
+    */
+    Route::middleware(['role:manager'])->group(function () {
+
+        // Dashboard Manager
+        Route::get('/manager/dashboard', function () {
+            return view('manager.dashboard');
+        });
+
+        // Project approval
         Route::get('/projects', [ProjectController::class, 'index']);
         Route::post('/projects/{id}/approve', [ProjectController::class, 'approve']);
         Route::post('/projects/{id}/reject', [ProjectController::class, 'reject']);
+
+        // User management (internal)
+        Route::post('/users', [UserController::class, 'store']);
     });
 });
-
-/*
-|--------------------------------------------------------------------------
-| TEST ROLE MIDDLEWARE
-|--------------------------------------------------------------------------
-*/
-Route::get('/test-role', function () {
-    return 'ROLE OK';
-})->middleware('role:sales');
-
-/*
-|--------------------------------------------------------------------------
-| User Management (Internal)
-|--------------------------------------------------------------------------
-| Hanya manager yang boleh membuat user baru
-*/
-Route::post('/users', [UserController::class, 'store'])
-    ->middleware(['auth', 'role:manager']);
