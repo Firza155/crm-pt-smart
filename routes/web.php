@@ -42,9 +42,15 @@ Route::middleware(['auth'])->group(function () {
 
         // Lead management
         Route::get('/leads', [LeadController::class, 'index']);
+        Route::get('/leads/create', [LeadController::class, 'create']);
+        Route::post('/leads', [LeadController::class, 'store']);
+        Route::get('/leads/{lead}', [LeadController::class, 'show']);
+        Route::get('/leads/{lead}/edit', [LeadController::class, 'edit']);
+        Route::put('/leads/{lead}', [LeadController::class, 'update']);
+        Route::delete('/leads/{lead}', [LeadController::class, 'destroy']);
 
         // Project submission
-        Route::get('/projects/create', [ProjectController::class, 'create']);
+        Route::get('/projects/create/{lead}', [ProjectController::class, 'create']);
         Route::post('/projects', [ProjectController::class, 'store']);
     });
 

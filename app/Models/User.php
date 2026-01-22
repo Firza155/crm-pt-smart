@@ -21,4 +21,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Project::class, 'approved_by');
     }
+
+    //Kolom yang boleh diisi saat create user.
+    protected $fillable = [
+        'name', 'email', 'password', 'role'
+    ];
 }
