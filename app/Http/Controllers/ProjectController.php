@@ -110,8 +110,11 @@ class ProjectController extends Controller
             'approved_at' => now(),
         ]);
 
+        //Jalankan konversi Lead → Customer (STEP 7)
+        $this->convertLeadToCustomer($project);
+
         return response()->json([
-            'message' => 'Project berhasil disetujui',
+            'message' => 'Project berhasil disetujui dan customer berhasil dibuat',
             'data'    => $project,
         ]);
     }
@@ -133,6 +136,39 @@ class ProjectController extends Controller
         return response()->json([
             'message' => 'Project berhasil ditolak',
             'data'    => $project,
+        ]);
+    }
+
+    //Konversi Lead menjadi Customer (SYSTEM LOGIC)
+    private function convertLeadToCustomer(Project $project)
+    {
+        $lead = $project->lead;
+
+        //Cegah konversi ganda
+        if ($lead->customer) {
+            return;
+        }
+
+        //Buat customer dari data lead
+        $customer = \App\Models\Customer::create([
+            'lead_id' => $lead->id,
+            'name'    => $lead->name,
+            'phone'   => $lead->phone,
+            'email'   => $lead->email,
+            'address' => $lead->address,
+        ]);
+
+        //Buat layanan aktif customer
+        \App\Models\CustomerService::create([
+            'customer_id' => $customer->id,
+            'product_id'  => $project->product_id,
+            'start_date'  => now()->toDateString(),
+            'status'      => 'active',
+        ]);
+
+        //Update status lead → converted
+        $lead->update([
+            'status' => 'converted',
         ]);
     }
 }
