@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Auth;
 |--------------------------------------------------------------------------
 | Login & logout untuk user internal (Sales & Manager)
 */
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
 Route::get('/login', [AuthController::class, 'showLoginForm'])
     ->name('login');
 
