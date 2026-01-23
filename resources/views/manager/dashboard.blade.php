@@ -1,33 +1,57 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard Manager | CRM PT Smart</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+@extends('layouts.app')
 
-<div class="container mt-5">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h4>Dashboard Manager</h4>
-            <p>Selamat datang, {{ auth()->user()->name }}</p>
+@section('title', 'Dashboard Manager')
 
-            <hr>
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/manager.css') }}">
+@endpush
 
-            <ul>
-                <li>Review Project</li>
-                <li>Approve / Reject Project</li>
-                <li>Manajemen User (Sales / Manager)</li>
-            </ul>
+@section('content')
+<h3 class="mb-4">Dashboard Manager</h3>
 
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button class="btn btn-danger mt-3">Logout</button>
-            </form>
+<div class="row g-3 mb-4">
+    {{-- Pending --}}
+    <div class="col-md-4">
+        <div class="card border-warning">
+            <div class="card-body">
+                <h6 class="text-muted">Project Pending</h6>
+                <h3 id="pending-count">{{ $pendingCount }}</h3>
+            </div>
+        </div>
+    </div>
+
+    {{-- Approved --}}
+    <div class="col-md-4">
+        <div class="card border-success">
+            <div class="card-body">
+                <h6 class="text-muted">Project Approved</h6>
+                <h3 id="approved-count">{{ $approvedCount }}</h3>
+            </div>
+        </div>
+    </div>
+
+    {{-- Rejected --}}
+    <div class="col-md-4">
+        <div class="card border-danger">
+            <div class="card-body">
+                <h6 class="text-muted">Project Rejected</h6>
+                <h3 id="rejected-count">{{ $rejectedCount }}</h3>
+            </div>
         </div>
     </div>
 </div>
 
-</body>
-</html>
+<div class="card">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="mb-1">Approval Project</h5>
+            <p class="text-muted mb-0">
+                Kelola pengajuan project dari Sales
+            </p>
+        </div>
+        <a href="/manager/projects" class="btn btn-primary">
+            Lihat Project Pending
+        </a>
+    </div>
+</div>
+@endsection

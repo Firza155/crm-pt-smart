@@ -76,7 +76,7 @@ class LeadController extends Controller
         $this->authorizeLead($lead);
 
         // Lead yang sudah converted tidak boleh diubah
-        if ($lead->status === 'converted') {
+        if ($lead->status !== 'new') {
             abort(403, 'Lead sudah menjadi customer dan tidak bisa diubah');
         }
 
@@ -100,7 +100,7 @@ class LeadController extends Controller
     {
         $this->authorizeLead($lead);
 
-        if ($lead->status === 'converted') {
+        if ($lead->status !== 'new') {
             abort(403, 'Lead yang sudah menjadi customer tidak bisa dihapus');
         }
 

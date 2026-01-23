@@ -1,0 +1,23 @@
+/* =====================================================
+   Lead Actions - Sales
+   ===================================================== */
+
+/* Container aksi */
+.lead-actions {
+    display: flex;
+    flex-direction: column; /* tombol vertikal */
+    gap: 10px;               /* jarak antar tombol */
+}
+
+/* Samakan lebar tombol */
+.lead-actions .btn {
+    width: 100%;
+    text-align: center;
+}
+
+/* Di layar besar, tetap enak dilihat */
+@media (min-width: 992px) {
+    .lead-actions {
+        max-width: 150px;
+    }
+}

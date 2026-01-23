@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 // Controller untuk pengajuan Project oleh Sales
 class ProjectController extends Controller
@@ -99,23 +100,32 @@ class ProjectController extends Controller
     //Manager menyetujui project
     public function approve(Project $project)
     {
-        // Pastikan project masih pending
-        if ($project->status !== 'pending') {
-            abort(403, 'Project ini sudah diproses');
-        }
 
-        $project->update([
-            'status'      => 'approved',
-            'approved_by' => auth()->id(),
-            'approved_at' => now(),
-        ]);
+        DB::transaction(function () use ($project) {
 
-        //Jalankan konversi Lead → Customer (STEP 7)
-        $this->convertLeadToCustomer($project);
+            // Ambil ulang project + lock (anti race condition)
+            $lockedProject = Project::where('id', $project->id)
+                ->lockForUpdate()
+                ->first();
+
+            // Pastikan project masih pending
+            if ($lockedProject->status !== 'pending') {
+                abort(403, 'Project ini sudah diproses');
+            }
+
+            // Update status project
+            $lockedProject->update([
+                'status'      => 'approved',
+                'approved_by' => auth()->id(),
+                'approved_at' => now(),
+            ]);
+
+            //Jalankan konversi Lead → Customer
+            $this->convertLeadToCustomer($lockedProject);
+        });
 
         return response()->json([
             'message' => 'Project berhasil disetujui dan customer berhasil dibuat',
-            'data'    => $project,
         ]);
     }
 
@@ -131,6 +141,11 @@ class ProjectController extends Controller
             'status'      => 'rejected',
             'approved_by' => auth()->id(),
             'approved_at' => now(),
+        ]);
+
+        // Jika project ditolak, lead juga ditolak
+        $project->lead->update([
+            'status' => 'rejected',
         ]);
 
         return response()->json([

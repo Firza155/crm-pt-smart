@@ -1,33 +1,44 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard Sales | CRM PT Smart</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+@extends('layouts.app')
 
-<div class="container mt-5">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h4>Dashboard Sales</h4>
-            <p>Selamat datang, {{ auth()->user()->name }}</p>
+@section('title', 'Dashboard Sales')
 
-            <hr>
+@section('content')
 
-            <ul>
-                <li>Kelola Lead</li>
-                <li>Mengajukan Project</li>
-                <li>Melihat Status Project</li>
-            </ul>
+<h3 class="mb-4">Dashboard Sales</h3>
 
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button class="btn btn-danger mt-3">Logout</button>
-            </form>
+<div class="alert alert-info">
+    Selamat datang, <strong>{{ auth()->user()->name }}</strong>.
+    Gunakan menu di bawah untuk mengelola lead Anda.
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Daftar Lead</h5>
+                <p class="card-text">
+                    Lihat semua lead yang telah Anda input.
+                </p>
+                <a href="{{ url('/sales/leads') }}" class="btn btn-primary">
+                    Lihat Lead
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Tambah Lead</h5>
+                <p class="card-text">
+                    Tambahkan calon customer baru ke sistem.
+                </p>
+                <a href="{{ url('/sales/leads/create') }}" class="btn btn-outline-primary">
+                    Tambah Lead
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
-</body>
-</html>
+@endsection

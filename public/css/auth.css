@@ -1,0 +1,48 @@
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    background-color: #f5f7fa;
+    padding-top: 12vh; 
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Header card */
+.auth-card-header {
+    padding: 16px;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Body card */
+.auth-card-body {
+    padding: 20px;
+}
+
+
+/* Animation */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

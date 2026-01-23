@@ -1,0 +1,15 @@
+/* Background halaman */
+body {
+    background-color: #f8f9fa; /* abu-abu sangat muda */
+}
+
+/* Card default */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+/* Override warna navbar agar lebih soft & profesional */
+.navbar.bg-primary {
+    background-color: #2c7be5 !important; /* ganti sesuai opsi pilihan */
+}
